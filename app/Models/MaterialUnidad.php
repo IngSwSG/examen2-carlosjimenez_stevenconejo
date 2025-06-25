@@ -6,26 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class MaterialUnidad extends Model
 {
-    protected $table = 'material_unidads';
+    protected $table = 'material_unidades';
     protected $primaryKey = 'idMaterialUnidad';
     public $timestamps = false;
     protected $fillable = [
         'cantidad',
         'idUnidad',
+        'codigoPresupuesto',
+        'codigoMaterial',
     ];
 
     public function unidad()
     {
-        return $this->belongsTo(Unidad::class, 'idUnidad');
+        return $this->belongsTo(Unidad::class, 'idUnidad', 'idUnidad');
     }
 
-    public function materiales()
+    public function material()
     {
-        return $this->belongsToMany(Material::class, 'material_unidads', 'idMaterialUnidad', 'codigo');
+        return $this->belongsTo(Material::class, 'codigoMaterial', 'codigo');
     }
 
     public function presupuesto()
     {
-        return $this->belongsTo(Presupuesto::class, 'codigoPresupuesto');
+        return $this->belongsTo(Presupuesto::class, 'codigoPresupuesto', 'codigoPresupuesto');
     }
 } 

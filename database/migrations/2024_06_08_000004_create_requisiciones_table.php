@@ -7,17 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('requisicions', function (Blueprint $table) {
+        Schema::create('requisiciones', function (Blueprint $table) {
             $table->id('idRequisicion');
             $table->dateTime('fecha');
             $table->string('estado');
             $table->unsignedBigInteger('idUsuario');
-            $table->foreign('idUsuario')->references('idUsuario')->on('usuarios');
+            $table->foreign('idUsuario')->references('id')->on('users');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('requisicions');
+        Schema::dropIfExists('requisiciones');
     }
 }; 

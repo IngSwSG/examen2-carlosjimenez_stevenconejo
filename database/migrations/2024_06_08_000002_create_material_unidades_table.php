@@ -7,18 +7,20 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('material_unidads', function (Blueprint $table) {
+        Schema::create('material_unidades', function (Blueprint $table) {
             $table->id('idMaterialUnidad');
             $table->integer('cantidad');
             $table->unsignedBigInteger('idUnidad');
             $table->unsignedBigInteger('codigoPresupuesto');
-            $table->foreign('idUnidad')->references('idUnidad')->on('unidads');
+            $table->unsignedBigInteger('codigoMaterial');
+            $table->foreign('idUnidad')->references('idUnidad')->on('unidades');
             $table->foreign('codigoPresupuesto')->references('codigoPresupuesto')->on('presupuestos');
+            $table->foreign('codigoMaterial')->references('codigo')->on('materiales');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('material_unidads');
+        Schema::dropIfExists('material_unidades');
     }
 }; 
