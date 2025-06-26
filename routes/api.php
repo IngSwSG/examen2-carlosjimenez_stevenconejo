@@ -12,4 +12,7 @@ Route::prefix('materiales')->group(function () {
     Route::post('/', [MaterialController::class, 'store'])->name('materiales.store');
     Route::get('/', [MaterialController::class, 'index'])->name('materiales.index');
     Route::get('/{codigo}', [MaterialController::class, 'show'])->name('materiales.show');
-}); 
+});
+
+Route::get('/materiales', [MaterialController::class, 'index']);
+Route::put('/materiales/{codigo}', [MaterialController::class, 'update']); 

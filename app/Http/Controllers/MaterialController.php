@@ -111,4 +111,64 @@ class MaterialController extends Controller
             ], 500);
         }
     }
+
+    public function update(Request $request, int $codigo): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'unidadMedida' => 'sometimes|required|string|max:50',
+            'descripcion' => 'sometimes|required|string|max:255',
+            'ubicacion' => 'sometimes|required|string|max:100',
+            'idCategoria' => 'sometimes|required|integer|exists:categorias,idCategoria',
+        ], [
+            'unidadMedida.required' => 'La unidad de medida es obligatoria',
+            'descripcion.required' => 'La descripción es obligatoria',
+            'ubicacion.required' => 'La ubicación es obligatoria',
+            'idCategoria.required' => 'El ID de categoría es obligatorio',
+            'idCategoria.exists' => 'La categoría especificada no existe',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $material = Material::find($codigo);
+            if (!$material) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Material no encontrado'
+                ], 404);
+            }
+
+            if ($request->has('idCategoria')) {
+                $categoria = Categoria::find($request->idCategoria);
+                if (!$categoria) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'La categoría especificada no existe'
+                    ], 404);
+                }
+            }
+
+            $material->update($request->only(['unidadMedida', 'descripcion', 'ubicacion', 'idCategoria']));
+            $material->load('categoria');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Material actualizado exitosamente',
+                'data' => $material
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el material',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 } 
